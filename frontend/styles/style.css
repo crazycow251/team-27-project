@@ -1,0 +1,130 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 100px 20px 40px 20px;
+}
+
+/* Navbar */
+.navbar-default {
+    background-color: rgb(232, 196, 104);
+    border-radius: 0;
+    border: none;
+    margin: 0;
+}
+
+.navbar-default .navbar-brand {
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    font-size: 1.3rem;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li.active > a {
+    color: rgb(0, 0, 0);
+    background: transparent;
+}
+
+/* Hero */
+.hero {
+    margin-bottom: 80px;
+    padding: 50px 10px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: rgb(46, 44, 44);
+    margin-bottom: 30px;
+}
+
+/* Dashboard  */
+.dashboard h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.dashboard-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.dashboard-card {
+    background: rgb(255, 255, 255);
+    border-radius: 12px;
+    padding: 30px 15px;
+    flex: 1 1 220px;
+    max-width: 250px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h3 {
+    color: rgb(0, 0, 0);
+    margin: 15px 0 10px;
+}
+
+.dashboard-card p {
+    color: rgb(0, 0, 0);
+    font-size: 0.95rem;
+}
+
+.icon-placeholder {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+.footer {
+    background-color: rgb(232, 196, 104);
+    color: rgb(0, 0, 0);
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn-dark {
+    background-color: rgb(78, 78, 78);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.btn-dark:hover {
+    background-color: rgb(112, 112, 112);
+    color: rgb(255, 255, 255);
+}
