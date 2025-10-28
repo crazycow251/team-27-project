@@ -1,0 +1,176 @@
+/* General Layout */
+
+
+#dash {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-top: 120px;
+    margin-bottom: 40px;
+}
+
+
+
+/* Project Summary Section */
+.projects {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+
+.projects h2 {
+    font-size: 1.3rem;
+    margin: 10px 0 5px;
+    color: #000;
+    text-align: center;
+}
+
+.projects h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+#blue{
+    color: #0d6efd;
+}
+
+#green{
+    color: #198754;
+}
+
+#red{
+    color: #dc3545;
+}
+
+.projects > div {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    flex: 1 1 220px;
+    max-width: 250px;
+    text-align: center;
+}
+
+/* Filters Section */
+.filtersBox {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 80%;
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 30px 20px;
+}
+
+.filterHeader {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#filterstitle {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.filterBody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+.applyBtn {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 10px auto 0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(78, 78, 78);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.applyBtn:hover {
+    background-color: rgb(112, 112, 112);
+}
+
+/* Charts Section */
+.charts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px 80px;
+}
+
+.progressChart {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.progressChart h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Footer */
+.footer {
+    background-color: rgb(232, 196, 104);
+    color: rgb(0, 0, 0);
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .projects {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .filtersBox {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .charts {
+        flex-direction: column;
+        align-items: center;
+    }
+}

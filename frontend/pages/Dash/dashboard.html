@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make It All Dashboard</title>
+    <link rel="stylesheet" href="dashboardcss.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    
+</head>
+
+<body>
+
+     <!-- Navbar -->
+     <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">Make-It-All Ltd</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item active"><a href="" class="nav-btn">Home</a></li>
+                <li class="nav-item active"><a href="dashboard.html" class="nav-btn">Dashboards</a></li>
+                <li class="nav-item active"><a href="" class="nav-btn">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <h1 id="dash">Dashboard</h1>
+
+    <div class="projects">
+        <h2 id="Active">Active Projects:</h2>
+        <h3 id="blue">3</h3>
+
+        <h2 id="Completed">Completed Projects:</h2>
+        <h3 id="green">5</h3>
+
+        <h2 id="Overdue">Overdue Projects:</h2>
+        <h3 id="red">1</h3>
+
+    </div>
+
+    <div class="deadlines">
+        <h2 id="deadlineTitle">Upcoming Deadlines:</h2>
+        <div class="deadlineBody">
+        </div>
+            <div class="deadlineItem">
+                <p class="deadlineDate">November 15</p>
+                <p class="deadlineDesc">App Prototype Due</p>
+            </div>
+            <div class="deadlineItemOverdue">
+                <p class="deadlineDate">October 22</p>
+                <p class="deadlineDesc">Homepage Design - OVERDUE</p>
+            </div>
+            <div class="deadlineItem">
+                <p class="deadlineDate">October 31</p>
+                <p class="deadlineDesc">Campaign Launch</p>
+            </div>
+            
+        </div>
+        
+
+    <div class="filtersBox">
+        <div class="filterHeader">
+        <h2 id="filterstitle">Filters</h2>
+        </div>
+
+        <div class="filterBody">
+            <label class="projLab">Project</label>
+            <select class="projSelect">
+                <option selected>All Projects</option>
+                <option>Project A</option>
+                <option>Project B</option>
+                <option>Project C</option>
+                <option>Project D</option>
+                <option>Project E</option>
+            </select>
+        </div>
+        <div class="filterBody">
+            <label class="teamLab">Team</label>
+            <select class="teamSelect">
+                <option selected>All Teams</option>
+                <option>Worker A</option>
+                <option>Worker B</option>
+                <option>Worker C</option>
+                <option>Worker D</option>
+                <option>Worker E</option>
+            </select>
+        </div>
+        <button class="applyBtn">Apply Filters</button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Add a New Task</h5>
+          <form id="task-form" class="row g-2">
+            <div class="col-md-5">
+              <input type="text" id="task-desc" class="form-control" placeholder="Task description" required>
+            </div>
+            <div class="col-md-4">
+              <input type="text" id="task-project" class="form-control" placeholder="Project name (tag)" required>
+            </div>
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary w-100">Add Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5>Your Tasks</h5>
+          <ul id="task-list" class="list-group"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5>Progress</h5>
+          <div class="progress" style="height: 20px;">
+            <div class="progress-bar bg-success" id="progress-bar" style="width: 0%;">0%</div>
+          </div>
+        </div>
+      </div>
+
+    <div class="charts">
+        <div class="progressChart">
+            <h2 class="workloadtitle">Team Workload Distribution</h2>
+            <canvas class="wlc" id="workloadChart"></canvas>
+        </div>
+
+        <div class="progressChart">
+            <h2 class="progressTitle">Overall Project Progress</h2>
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer text-center mt-auto">
+        <div class="container">
+            <p>Make-It-All Ltd | Team 27 Project</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        const workload = document.getElementById('workloadChart');
+        const progressCtx = document.getElementById('progressChart');
+
+
+        new Chart(progressCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Project A', 'Project B', 'Project C', 'Project D', 'Project E'],
+                datasets: [{
+                    label: 'Completion %',
+                    data: [75, 40, 90, 60, 55],
+                    backgroundColor: [
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        new Chart(workload, {
+            type: 'pie',
+            data: {
+                labels: ['Worker A', 'Worker B', 'Worker C', 'Worker D', 'Worker E'],
+                datasets: [{
+                    data: [12, 8, 5, 7, 10],
+                    backgroundColor: [
+                        '#0d6efd',
+                        '#198754',
+                        '#fd7e14',
+                        '#6f42c1',
+                        '#dc3545'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+    </script>
+
+    <script type="module">
+        import { EmployeeDashboard } from './EmployeeDashboard.js';
+        const app = document.getElementById('app');
+        const dashboard = new EmployeeDashboard(app);
+        dashboard.init();
+    </script>
+
+
+</body>
+
+</html>
