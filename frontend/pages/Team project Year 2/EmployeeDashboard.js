@@ -1,4 +1,4 @@
-// EmployeeDashboard.js
+//EmployeeDashboard.js
 export class EmployeeDashboard {
   constructor(root) {
     this.root = root;

@@ -1,4 +1,4 @@
-// Dashboard.js
+//Dashboard.js
 export class ManagerDashboard {
   constructor(root) {
     this.root = root;
