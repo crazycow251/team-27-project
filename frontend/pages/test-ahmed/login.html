@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Make-It-All Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="loginContainer">
+    <img src="makeItAll.png" alt="Make-It-All logo" class="logo">
+    <h2>Login to Make-It-All</h2>
+
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Your email" required>
+      <input type="password" id="password" placeholder="Enter password" required>
+
+      <div class="showPasswordContainer" style="text-align:left; margin-bottom:10px;">
+        <input type="checkbox" id="showPassword">
+        <label for="showPassword">Show Password</label>
+      </div>
+
+      <p class="error" id="errorMessage"></p>
+
+      <button type="submit" id="loginButton">Login</button>
+      <button type="button" id="forgotPassword" style="margin-top:10px;">
+        Forgot Password?
+      </button>
+    </form>
+
+    <form id="managerForm" style="display:none;">
+      <input type="text" id="managerCode" placeholder="Enter your manager code please" required>
+      <button type="submit">Submit</button>
+      <p class="error" id="managerError"></p>
+    </form>
+  </div>
+
+  <script>
+    const users = {
+      "manager@makeItAll": { password: "Manager123", role: "Manager", managerCode: "Code123" },
+      "employee@makeItAll": { password: "Employee123", role: "Employee" }
+    };
+
+    let loginAttempts = 0;
+    const maxAttempts = 3;
+    const lockoutTime = 60; 
+    let timeRemaining = 0;
+    let lockoutTimer = null;
+
+    const loginForm = document.getElementById("loginForm");
+    const managerForm = document.getElementById("managerForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const managerError = document.getElementById("managerError");
+    const loginButton = document.getElementById("loginButton");
+    const forgotPassword = document.getElementById("forgotPassword");
+
+    document.getElementById("showPassword").addEventListener("change", function() {
+      const passwordField = document.getElementById("password");
+      passwordField.type = this.checked ? "text" : "password";
+    });
+
+    forgotPassword.addEventListener("click", () => {
+      alert("The password reset instructions would be sent to your email.");
+    });
+
+    function startLockout() {
+      timeRemaining = lockoutTime;
+      loginButton.disabled = true;
+      forgotPassword.disabled = true;
+      document.getElementById("email").disabled = true;
+      document.getElementById("password").disabled = true;
+
+      lockoutTimer = setInterval(() => {
+        errorMessage.textContent = `Too many failed attempts. Account locked for ${timeRemaining} second(s).`;
+        timeRemaining--;
+
+        if (timeRemaining < 0) {
+          clearInterval(lockoutTimer);
+          errorMessage.textContent = "";
+          loginButton.disabled = false;
+          forgotPassword.disabled = false;
+          document.getElementById("email").disabled = false;
+          document.getElementById("password").disabled = false;
+          loginAttempts = 0;
+        }
+      }, 1000);
+    }
+
+    loginForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (users[email] && users[email].password === password) {
+        loginAttempts = 0;
+        errorMessage.textContent = "";
+
+        const role = users[email].role;
+        if (role === "Manager") {
+          loginForm.style.display = "none";
+          managerForm.style.display = "block";
+          sessionStorage.setItem("tenpManager", email);
+        } else {
+          alert("successfull login.");//replace with redirection to emplyee dashboard
+          window.location.href = "Hs-Employee.html";
+        }
+      } else {
+        loginAttempts++;
+        if (loginAttempts >= maxAttempts) {
+          startLockout();
+        } else {
+          const remaining = maxAttempts - loginAttempts;
+          errorMessage.textContent = `Invalid email or password. You have ${remaining} attempt(s) remaining.`;
+        }
+      }
+    });
+
+    managerForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const managerCode = document.getElementById("managerCode").value.trim();
+      const email = sessionStorage.getItem("tenpManager");
+
+      if (email && users[email].managerCode === managerCode) {
+        managerError.textContent = "";
+        alert("login successfull"); // redirect to manager dashboard page
+        window.location.href = "Hs-Manager.html";
+      } else {
+        managerError.textContent = "Invalid manager code.";
+      }
+    });
+  </script>
+</body>
+</html>
