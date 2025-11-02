@@ -7,6 +7,8 @@ html, body {
     flex-direction: column;
 }
 
+
+
 /* Recurring Elements CSS - START */
 
 /* Navbar */
@@ -35,12 +37,32 @@ html, body {
     background: transparent;
 }
 
+.navbar-header {
+    float: left;
+}
+
+.navbar-header .navbar-brand {
+    display: flex;
+    align-items: center; 
+    gap: 10px;
+}
+
+.navbar-header .navbar-brand img {
+    display: block;
+    height: 40px;
+    width: auto;
+}
+
+
 /* Footer */
 .footer {
     background-color: rgb(232, 196, 104);
     color: rgb(0, 0, 0);
     padding: 20px 0;
     font-size: 0.9rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 /* Recurring Elements CSS - END */
@@ -138,3 +160,97 @@ html, body {
 }
 
 /* Index.html CSS - END */
+
+
+
+/* Login.html CSS - START */
+
+.login-container {
+    max-width: 400px;
+    margin: 120px auto 50px auto;
+    padding: 40px 30px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.login-container .logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.login-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+    margin-bottom: 25px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"],
+.login-container input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.login-container input:focus {
+    border-color: rgb(232, 196, 104);
+    outline: none;
+}
+
+.show-password-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: rgb(46, 44, 44);
+}
+
+.login-container .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#loginButton {
+    background-color: rgb(78, 78, 78);
+    color: #fff;
+}
+
+#loginButton:hover {
+    background-color: rgb(112, 112, 112);
+}
+
+#forgotPassword {
+    background-color: rgb(232, 196, 104);
+    color: rgb(0, 0, 0);
+}
+
+#forgotPassword:hover {
+    background-color: rgb(210, 180, 80);
+}
+
+#managerForm {
+    margin-top: 20px;
+}

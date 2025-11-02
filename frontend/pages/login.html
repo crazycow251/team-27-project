@@ -1,20 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Make-It-All Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make-It-All Productivity System</title>
+
+    <!-- CDNs -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="../styles/style.css">
+
 </head>
-<body>
-  <div class="loginContainer">
-    <img src="makeItAll.png" alt="Make-It-All logo" class="logo">
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+          <div class="navbar-header">
+              <a class="navbar-brand" href="/index.html"><img src="../../assets/MakeItAllLogo.png" width="30" height="30" alt=""></a>
+              <a class="navbar-brand" href="/index.html">Make-It-All Ltd</a>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+              <li class="nav-item active"><a href="" class="nav-btn">Login</a></li>
+              <li class="nav-item active"><a href="" class="nav-btn">Home</a></li>
+              <li class="nav-item active"><a href="" class="nav-btn">Dashboards</a></li>
+              <li class="nav-item active"><a href="" class="nav-btn">Contact</a></li>
+          </ul>
+      </div>
+  </nav>
+
+  <!-- Login Functionality -->
+  <div class="login-container">
+    <img src="../../assets/MakeItAllLogo.png" alt="Make-It-All logo" class="logo">
     <h2>Login to Make-It-All</h2>
 
     <form id="loginForm">
       <input type="email" id="email" placeholder="Your email" required>
       <input type="password" id="password" placeholder="Enter password" required>
 
-      <div class="showPasswordContainer" style="text-align:left; margin-bottom:10px;">
+      <div class="show-password-container" style="text-align:left; margin-bottom:10px;">
         <input type="checkbox" id="showPassword">
         <label for="showPassword">Show Password</label>
       </div>
@@ -32,6 +58,13 @@
       <button type="submit">Submit</button>
       <p class="error" id="managerError"></p>
     </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer text-center mt-auto">
+      <div class="container">
+          <p>Make-It-All Ltd | Team 27 Project</p>
+      </div>
   </div>
 
   <script>
@@ -98,10 +131,10 @@
         if (role === "Manager") {
           loginForm.style.display = "none";
           managerForm.style.display = "block";
-          sessionStorage.setItem("tenpManager", email);
+          sessionStorage.setItem("tempManager", email);
         } else {
-          alert("successfull login.");//replace with redirection to emplyee dashboard
-          window.location.href = "Hs-Employee.html";
+          alert("Successful Login.");
+          window.location.href = "dashboard.html";
         }
       } else {
         loginAttempts++;
@@ -117,12 +150,12 @@
     managerForm.addEventListener("submit", function(e) {
       e.preventDefault();
       const managerCode = document.getElementById("managerCode").value.trim();
-      const email = sessionStorage.getItem("tenpManager");
+      const email = sessionStorage.getItem("tempManager");
 
       if (email && users[email].managerCode === managerCode) {
         managerError.textContent = "";
-        alert("login successfull"); // redirect to manager dashboard page
-        window.location.href = "Hs-Manager.html";
+        alert("login successfull");
+        window.location.href = "manager.html";
       } else {
         managerError.textContent = "Invalid manager code.";
       }
