@@ -7,6 +7,8 @@ html, body {
     flex-direction: column;
 }
 
+/* Recurring Elements CSS - START */
+
 /* Navbar */
 .navbar-default {
     background-color: rgb(232, 196, 104);
@@ -33,7 +35,19 @@ html, body {
     background: transparent;
 }
 
-/* Index.html CSS */
+/* Footer */
+.footer {
+    background-color: rgb(232, 196, 104);
+    color: rgb(0, 0, 0);
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+/* Recurring Elements CSS - END */
+
+
+
+/* Index.html CSS - START */
 
 .index-main-content {
     flex: 1;
@@ -107,14 +121,6 @@ html, body {
     margin-bottom: 15px;
 }
 
-/* Footer */
-.footer {
-    background-color: rgb(232, 196, 104);
-    color: rgb(0, 0, 0);
-    padding: 20px 0;
-    font-size: 0.9rem;
-}
-
 /* Buttons */
 .index-btn-dark {
     background-color: rgb(78, 78, 78);
@@ -131,3 +137,4 @@ html, body {
     color: rgb(255, 255, 255);
 }
 
+/* Index.html CSS - END */
