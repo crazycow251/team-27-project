@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["Email"]) && isset($_P
     if ($_SESSION["role"] === "Manager") {
       $_SESSION["awaitingManagerCode"] = true; 
     } else {
-      header("Location: dashboard.php");//this is where you enter your employee dashboard page
+      header("Location: Hs-Employee.html");//this is where you enter your employee dashboard page
       exit();
     }
   } else {
@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["managerCode"])) {
     $email = $_SESSION["email"];
     if ($managerCode === $user[$email]["managerCode"]) {
       unset($_SESSION["awaitingManagerCode"]);
-      header("Location: dashboard.php");//this is where you enter your managar dashboard page
+      header("Location: Hs-Manager.html");//this is where you enter your managar dashboard page
       exit();
     } else {
       $managerError = "Invalid manager code.";
