@@ -3,7 +3,9 @@ Make-it-all Ltd
 This is a front-end prototype demonstrating login and role-based dashboard access for Manager and Employee accounts. The system uses hardcoded credentials and does not connect to a database.
 
 Login Credentials:
-Manager --> Email manager@make-it-all.co.uk, Password Manager123, Manager Code Code123
+
+Manager --> Email manager@make-it-all.co.uk, Password: Manager123, Manager Code: Code123
+
 Employee --> Email employee@make-it-all.co.uk, Password Employee123
 
 Instructions to Access Dashboards:
