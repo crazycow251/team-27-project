@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Make-It-All Productivity System</title>
+  <title>Make-It-All | Login</title>
 
   <!-- CDNs -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -25,16 +25,16 @@
               <a class="navbar-brand" href="/index.html">Make-It-All Ltd</a>
           </div>
           <ul class="nav navbar-nav navbar-right">
-              <li class="nav-item active"><a href="" class="nav-btn">Login</a></li>
-              <li class="nav-item active"><a href="" class="nav-btn">Home</a></li>
-              <li class="nav-item active"><a href="" class="nav-btn">Dashboards</a></li>
-              <li class="nav-item active"><a href="" class="nav-btn">Contact</a></li>
+              <li class="nav-item active"><a href="/frontend/pages/login.html" class="nav-btn">Login</a></li>
+                <li class="nav-item active"><a href="/frontend/pages/register.html" class="nav-btn">Register</a></li>
+                <li class="nav-item active"><a href="/index.html" class="nav-btn">Home</a></li>
+                <li class="nav-item active"><a href="/frontend/pages/employee.html" class="nav-btn">Dashboards</a></li>
           </ul>
       </div>
   </nav>
 
   <!-- Login Functionality -->
-  <div class="login-container">
+  <div class="security-container">
     <img src="../../assets/MakeItAllLogo.png" alt="Make-It-All logo" class="logo">
     <h2>Login to Make-It-All</h2>
 
@@ -71,13 +71,13 @@
 
   <script>
     const users = {
-      "manager@makeItAll": { password: "Manager123", role: "Manager", managerCode: "Code123" },
-      "employee@makeItAll": { password: "Employee123", role: "Employee" }
+      "manager@make-it-all.co.uk": { password: "Manager123", role: "Manager", managerCode: "Code123" },
+      "employee@make-it-all.co.uk": { password: "Employee123", role: "Employee" }
     };
 
     let loginAttempts = 0;
     const maxAttempts = 3;
-    const lockoutTime = 60; 
+    const lockoutTime = 60;
     let timeRemaining = 0;
     let lockoutTimer = null;
 
@@ -136,7 +136,7 @@
           sessionStorage.setItem("tempManager", email);
         } else {
           alert("Successful Login.");
-          window.location.href = "dashboard.html";
+          window.location.href = "employee.html";
         }
       } else {
         loginAttempts++;
@@ -156,7 +156,7 @@
 
       if (email && users[email].managerCode === managerCode) {
         managerError.textContent = "";
-        alert("login successfull");
+        alert("login successful");
         window.location.href = "manager.html";
       } else {
         managerError.textContent = "Invalid manager code.";

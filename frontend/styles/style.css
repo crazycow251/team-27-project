@@ -156,9 +156,9 @@ html, body {
 
 
 
-/* Login.html CSS - START */
+/* Login.html & Register.html CSS - START */
 
-.login-container {
+.security-container {
     max-width: 400px;
     margin: 120px auto 50px auto;
     padding: 40px 30px;
@@ -169,22 +169,22 @@ html, body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.login-container .logo {
+.security-container .logo {
     width: 80px;
     height: auto;
     margin-bottom: 20px;
 }
 
-.login-container h2 {
+.security-container h2 {
     font-size: 1.8rem;
     font-weight: 700;
     color: rgb(0, 0, 0);
     margin-bottom: 25px;
 }
 
-.login-container input[type="email"],
-.login-container input[type="password"],
-.login-container input[type="text"] {
+.security-container input[type="email"],
+.security-container input[type="password"],
+.security-container input[type="text"] {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 15px;
@@ -195,7 +195,7 @@ html, body {
     transition: border-color 0.3s;
 }
 
-.login-container input:focus {
+.security-container input:focus {
     border-color: rgb(232, 196, 104);
     outline: none;
 }
@@ -208,13 +208,13 @@ html, body {
     color: rgb(46, 44, 44);
 }
 
-.login-container .error {
+.security-container .error {
     color: rgb(255, 0, 0);
     font-size: 0.9rem;
     margin-bottom: 15px;
 }
 
-.login-container button {
+.security-container button {
     width: 100%;
     padding: 12px;
     margin-top: 5px;
@@ -225,12 +225,12 @@ html, body {
     transition: 0.3s;
 }
 
-#loginButton {
+#securityButton {
     background-color: rgb(78, 78, 78);
     color: rgb(255, 255, 255);
 }
 
-#loginButton:hover {
+#securityButton:hover {
     background-color: rgb(112, 112, 112);
 }
 
@@ -251,7 +251,7 @@ html, body {
 
 
 
-/* Dashboard Page CSS - START */
+/* Employee Page CSS - START */
 
 #dashboard-dash {
     text-align: center;
@@ -305,22 +305,26 @@ html, body {
 }
 
 .dashboard-projects > h2, .dashboard-projects > h3 {
-    background: #fff;
+    background: rgb(255, 255, 255);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     text-align: center;
 }
 
 .blue {
-    border-top: 5px solid #0d6efd;
+    border-top: 5px solid rgb(100, 130, 207);
 }
 
 .green {
-    border-top: 5px solid #198754;
+    border-top: 5px solid rgb(132, 223, 113);
 }
 
 .red {
-    border-top: 5px solid #dc3545;
+    border-top: 5px solid rgb(214, 87, 87);
+}
+
+.grey {
+    border-top: 5px solid rgb(122, 128, 142);
 }
 
 .dashboard-task-section {
@@ -466,4 +470,86 @@ select {
     color: rgb(0, 0, 0);
 }
 
-/* Dashboard Page CSS - END */
+/* Employee Page CSS - END */
+
+
+
+/* Manager Page CSS - START */
+
+#manager-table {
+  background: rgb(255, 255, 255);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+#manager-table th {
+  background-color: #0d6efd;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  font-weight: 600;
+}
+
+#manager-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#manager-table-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+
+#manager-tasks .list-group-item {
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px !important;
+  border: 1px solid #ddd !important;
+  margin-bottom: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#manager-tasks .list-group-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.1);
+}
+
+#manager-tasks .list-group-item strong {
+  font-size: 1.2rem;
+}
+
+#manager-tasks .list-group-item small {
+  font-size: 1rem;
+}
+
+#manager-tasks .list-group-item.bg-light.border-danger {
+  border-left: 5px solid #dc3545 !important;
+}
+
+#manager-tasks .list-group-item .text-danger {
+  font-weight: 600;
+}
+
+#manager-chart canvas {
+  max-width: 100%;
+}
+
+#manager-chart .mb-4 canvas {
+  background-color: rgb(255, 255, 255);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+#manager-chart .mb-4 h5 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Manager Page CSS - END */
