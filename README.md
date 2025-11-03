@@ -4,9 +4,9 @@ This is a front-end prototype demonstrating login and role-based dashboard acces
 
 Login Credentials:
 
-Manager --> Email manager@make-it-all.co.uk, Password: Manager123, Manager Code: Code123
+Manager --> Email: manager@make-it-all.co.uk   |   Password: Manager123   |   Manager Code: Code123
 
-Employee --> Email employee@make-it-all.co.uk, Password Employee123
+Employee --> Email: employee@make-it-all.co.uk   |   Password: Employee123
 
 Instructions to Access Dashboards:
 
