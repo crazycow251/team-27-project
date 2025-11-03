@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make It All Dashboard</title>
+
+    <!-- CDNs -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Style Sheet -->
+    <link rel="stylesheet" href="/frontend/styles/style.css">
+    
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/index.html"><img src="/assets/MakeItAllLogo.png" width="30" height="30" alt=""></a>
+                <a class="navbar-brand" href="/index.html">Make-It-All Ltd</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item active"><a href="" class="nav-btn">Login</a></li>
+                <li class="nav-item active"><a href="" class="nav-btn">Home</a></li>
+                <li class="nav-item active"><a href="" class="nav-btn">Dashboards</a></li>
+                <li class="nav-item active"><a href="" class="nav-btn">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <h1 id="dashboard-dash">Dashboard</h1>
+
+    <!-- Dashboard -->
+    <div class="dashboard-projects">
+        <div class="dashboard-project-box blue">
+            <div class="dashboard-project-content">
+                <h2>Active Projects</h2>
+                <h3 id="blue">0</h3>
+            </div>
+        </div>
+        <div class="dashboard-project-box green">
+            <div class="dashboard-project-content">
+                <h2>Completed Projects</h2>
+                <h3 id="green">0</h3>
+            </div>
+        </div>
+        <div class="dashboard-project-box red">
+            <div class="dashboard-project-content">
+                <h2>Overdue Projects</h2>
+                <h3 id="red">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current & Completed Task Section -->
+    <div class="dashboard-task-section">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>Your Tasks</h5>
+                <p>Change progress and press confirm button to update your tasks progress</p>
+                <ul id="task-list" class="list-group"></ul>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>Completed Tasks</h5>
+                <ul id="completedTasks" class="list-group"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-filter-section">
+
+        <!-- Add Task -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Add a New Task</h5>
+                <form id="task-form" class="row g-2">
+                    <div class="col-md-5">
+                    <input type="text" id="taskName" class="form-control" placeholder="Task Name" required>
+                    </div>
+                    <div class="col-md-4">
+                    <input type="text" id="taskProject" class="form-control" placeholder="Team Name" required>
+                    </div>
+                    <div class="col-md-3">
+                    <input type="date" id="taskDate" class="form-control" placeholder="Due date" required>
+                    </div>
+                    <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="dashboard-filter-box">
+            <div class="dashboard-filter-header">
+                <h2 id="dashboard-filter-title">Filters</h2>
+            </div>
+            <div class="dashboard-filter-body">
+                <label class="projLab">Project</label>
+                <select class="projSelect">
+                    <option selected>All Projects</option>
+                    <option>Project A</option>
+                    <option>Project B</option>
+                    <option>Project C</option>
+                    <option>Project D</option>
+                    <option>Project E</option>
+                </select>
+            </div>
+            <div class="dashboard-filter-body">
+                <label class="teamLab">Team</label>
+                <select class="teamSelect">
+                    <option selected>All Teams</option>
+                    <option>Team A</option>
+                    <option>Team B</option>
+                    <option>Team C</option>
+                    <option>Team D</option>
+                    <option>Team E</option>
+                </select>
+            </div>
+            <button class="applyBtn">Apply Filters</button>
+        </div>
+        
+    </div>
+
+    <!-- Progress Charts -->
+    <div class="charts">
+        <div class="progressChart">
+            <h2 class="workloadtitle">Team Workload Distribution</h2>
+            <canvas class="wlc" id="workloadChart"></canvas>
+        </div>
+        <div class="progressChart">
+            <h2 class="progressTitle">Overall Project Progress</h2>
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer text-center mt-auto">
+        <div class="container">
+            <p>Make-It-All Ltd | Team 27 Project</p>
+        </div>
+    </div>
+
+    <script>
+        
+        const workload = document.getElementById('workloadChart');
+        const progressCtx = document.getElementById('progressChart');
+
+        new Chart(progressCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Project A', 'Project B', 'Project C', 'Project D', 'Project E'],
+                datasets: [{
+                    label: 'Completion %',
+                    data: [75, 40, 90, 60, 55],
+                    backgroundColor: [
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(13, 110, 253, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        new Chart(workload, {
+            type: 'pie',
+            data: {
+                labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+                datasets: [{
+                    data: [3, 2, 1, 4, 1],
+                    backgroundColor: [
+                        '#0d6efd',
+                        '#198754',
+                        '#fd7e14',
+                        '#6f42c1',
+                        '#dc3545'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+    </script>
+
+    <script type="module">
+
+            const form = document.getElementById("task-form");
+            const taskList = document.getElementById("task-list");
+            const completedList = document.getElementById("completedTasks");
+
+            const hardCodedTasks = [
+                {
+                    name: "Task 1",
+                    project: "Project A",
+                    teamName: "Team A",
+                    dueDate: "2025-12-15"
+                },
+
+                {
+                    name: "Task 2",
+                    project: "Project B",
+                    teamName: "Team B",
+                    dueDate: "2026-08-01"
+                },
+
+                {
+                    name: "Task 3",
+                    project: "Project C",
+                    teamName: "Team C",
+                    dueDate: "2025-11-07"
+                },
+                {
+                    name: "Task 4",
+                    project: "Project D",
+                    teamName: "Team D",
+                    dueDate: "2025-09-10"
+                },
+
+                {
+                    name: "Task 5",
+                    project: "Project E",
+                    teamName: "Team E",
+                    dueDate: "2025-07-05"
+                }
+            ];
+
+            function updateTaskProgress(){
+                const projectActive = document.querySelectorAll("#task-list li").length;
+                const projectCompleted = document.querySelectorAll("#completedTasks li").length;
+                const projectOverdue = document.querySelectorAll("#task-list li .badge.bg-danger").length;
+
+                document.getElementById("blue").textContent = projectActive;
+                document.getElementById("green").textContent = projectCompleted;
+                document.getElementById("red").textContent = projectOverdue ;
+            }
+
+            function addTask(desc, teamName, project, dateValue, isHardcoded = false) {
+                const [year, month, day] = dateValue.split("-");
+                const formattedDate = `${day}/${month}/${year}`;
+                const today = new Date();
+                const due = new Date(dateValue);
+                const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+                
+                let tag = "Due Soon";
+                let color = "bg-info text-dark";
+
+                if (diffDays < 0) {
+                    tag = "Overdue";
+                    color = "bg-danger";
+                } else if (diffDays <= 14) {
+                    tag = "Urgent";
+                    color = "bg-warning text-dark";
+                } else if (diffDays >= 30) {
+                    tag = "Upcoming";
+                    color = "bg-success";
+                }
+
+                const li = document.createElement("li");
+
+                li.dataset.project = project;
+                li.dataset.teamName = teamName;
+                li.dataset.hardcoded = isHardcoded;
+                li.className = "list-group-item d-flex justify-content-between align-items-center flex-wrap";
+                li.innerHTML = `
+                    <div class="me-3">
+                        <strong>${desc}</strong><br>
+                        <small class="text-muted">Project: ${project} | Due: ${formattedDate}</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted small">Progress:</span>
+                        <input type="number" min="0" max="100" value="0" class="form-control form-control-sm progress-input" style="width:70px;" title="Progress (%)">
+                        <span class="badge ${color}">${tag}</span>
+                        <button class="btn btn-sm btn-primary update-task">Update</button>
+                        <button class="btn btn-sm btn-outline-danger delete-task">✕</button>
+                    </div>
+                `;
+                taskList.appendChild(li);
+                form.reset();
+                updateTaskProgress();
+
+                // delete button
+                li.querySelector(".delete-task").addEventListener("click", () => {
+                    li.remove();
+                    updateTaskProgress();
+                });
+
+                // update button
+                li.querySelector(".update-task").addEventListener("click", () => {
+                    const progressInput = li.querySelector(".progress-input");
+                    const totalProgress = parseInt(progressInput.value);
+
+                    if (totalProgress >= 100){
+                        progressInput.disabled = true;
+                        li.querySelector(".update-task").remove();
+                        completedList.appendChild(li);
+                    }   else{
+                        if (li.parentElement !== taskList) {
+                            taskList.appendChild(li);
+                        }
+                    }
+                    updateTaskProgress();
+                });
+            }
+
+            //Hardcoded Tasks
+            hardCodedTasks.forEach(t => addTask(t.name, t.teamName, t.project, t.dueDate, true));
+
+            //new tasks
+            form.addEventListener("submit", e => {
+                    e.preventDefault();
+
+                    const desc = document.getElementById("taskName").value.trim();
+                    const project = document.getElementById("taskProject").value.trim();
+                    const dateValue = document.getElementById("taskDate").value;
+
+                    if (!desc || !project || !dateValue) return;
+
+                    addTask(desc, project, project, dateValue);
+                    form.reset();
+
+                });
+
+        //filter code
+        const projectFilter = document.querySelector(".projSelect");
+        const teamFilter = document.querySelector(".teamSelect");
+        const applyBtn = document.querySelector(".applyBtn");
+
+        applyBtn.addEventListener("click", () => {
+            const selectedProject = projectFilter.value;
+            const selectedTeam = teamFilter.value;
+
+            // Clear current list
+            taskList.innerHTML = "";
+
+            //iterates hardcoded list
+            hardCodedTasks.forEach(t => {
+                const matchesProject =
+                selectedProject === "All Projects" || t.project === selectedProject;
+                const matchesTeam =
+                selectedTeam === "All Teams" || t.teamName === selectedTeam;
+
+                if (matchesProject && matchesTeam) {
+                    addTask(t.name, t.teamName, t.project, t.dueDate, true);
+                }
+            });
+
+            updateTaskProgress();
+        });
+            
+    </script>
+
+</body>
+</html>

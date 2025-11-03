@@ -7,8 +7,6 @@ html, body {
     flex-direction: column;
 }
 
-
-
 /* Recurring Elements CSS - START */
 
 /* Navbar */
@@ -37,10 +35,6 @@ html, body {
     background: transparent;
 }
 
-.navbar-header {
-    float: left;
-}
-
 .navbar-header .navbar-brand {
     display: flex;
     align-items: center; 
@@ -53,16 +47,15 @@ html, body {
     width: auto;
 }
 
-
 /* Footer */
 .footer {
     background-color: rgb(232, 196, 104);
     color: rgb(0, 0, 0);
     padding: 20px 0;
     font-size: 0.9rem;
-    position: absolute;
-    bottom: 0;
     width: 100%;
+    text-align: center;
+    margin-top: auto; /* pushes footer to the bottom if page is short */
 }
 
 /* Recurring Elements CSS - END */
@@ -78,8 +71,8 @@ html, body {
 
 /* Hero */
 .index-hero {
-    margin-bottom: 80px;
-    padding: 50px 10px;
+    margin-bottom: 50px;
+    padding: 40px;
     background-color: rgb(255, 255, 255);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -195,7 +188,7 @@ html, body {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid rgb(255, 255, 255);
     border-radius: 8px;
     font-size: 1rem;
     box-sizing: border-box;
@@ -216,7 +209,7 @@ html, body {
 }
 
 .login-container .error {
-    color: red;
+    color: rgb(255, 0, 0);
     font-size: 0.9rem;
     margin-bottom: 15px;
 }
@@ -229,13 +222,12 @@ html, body {
     font-weight: 600;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
     transition: 0.3s;
 }
 
 #loginButton {
     background-color: rgb(78, 78, 78);
-    color: #fff;
+    color: rgb(255, 255, 255);
 }
 
 #loginButton:hover {
@@ -254,3 +246,224 @@ html, body {
 #managerForm {
     margin-top: 20px;
 }
+
+/* Login.html CSS - END */
+
+
+
+/* Dashboard Page CSS - START */
+
+#dashboard-dash {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    padding-top: 80px;
+    color: rgb(0, 0, 0);
+}
+
+.dashboard-projects {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.dashboard-project-box {
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    min-width: 220px;
+    flex: 1 1 220px;
+    max-width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-project-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-project-content h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: rgb(0, 0, 0);
+}
+
+.dashboard-project-content h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dashboard-projects > h2, .dashboard-projects > h3 {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.blue {
+    border-top: 5px solid #0d6efd;
+}
+
+.green {
+    border-top: 5px solid #198754;
+}
+
+.red {
+    border-top: 5px solid #dc3545;
+}
+
+.dashboard-task-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.dashboard-task-section .card {
+    flex: 1;
+}
+
+.dashboard-filter-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.dashboard-filter-section .card,
+.dashboard-filter-section .dashboard-filter-box {
+    flex: 1;
+    background: rgb(255, 255, 255);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    max-width: 900px;
+}
+
+.dashboard-filter-box {
+    margin: 0; 
+    width: auto;
+}
+
+.dashboard-filter-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #000;
+    text-align: left;
+}
+
+.applyBtn {
+    width: auto;
+    padding: 10px 20px;
+    border-radius: 6px;
+    background-color: #0d6efd;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    border: none;
+    transition: 0.3s;
+}
+
+#dashboard-filter-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+}
+
+.dashboard-filter-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgb(205, 205, 205);
+    font-size: 1rem;
+    background-color: rgb(255, 255, 255);
+}
+
+.applyBtn {
+    display: block;
+    width: 100%;
+    max-width: 220px;
+    margin: 10px auto 0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(78, 78, 78);
+    color: rgb(255, 255, 255);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.applyBtn:hover {
+    background-color: rgb(112, 112, 112);
+}
+
+.dashboard-task-section .card {
+    background: rgb(255, 255, 255);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 80%;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 30px;
+}
+
+.dashboard-task-section .card-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: rgb(0, 0, 0);
+}
+
+.charts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin: 40px 0 80px;
+    padding: 0 20px;
+}
+
+.progressChart {
+    background-color: rgb(255, 255, 255);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.progressChart h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: rgb(0, 0, 0);
+}
+
+/* Dashboard Page CSS - END */
