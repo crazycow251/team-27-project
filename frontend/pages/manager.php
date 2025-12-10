@@ -1,24 +1,110 @@
 <?php
 require_once 'config.php';
+session_start();
+
+// TEMP: normally you'd get manager ID from login session
+$manager_id = 100001; // <-- Replace with $_SESSION['staff_id'] once login is ready
+
+
+/* -----------------------------
+    GET TOTAL EMPLOYEES
+------------------------------ */
+$q1 = $conn->prepare("SELECT COUNT(*) AS total_employees FROM employee_login");
+$q1->execute();
+$totalEmployees = $q1->get_result()->fetch_assoc()['total_employees'];
+
+
+/* -----------------------------
+    GET TOTAL PROJECTS FOR THIS MANAGER
+------------------------------ */
+$q2 = $conn->prepare("SELECT COUNT(*) AS total_projects FROM projects WHERE manager_id = ?");
+$q2->bind_param("i", $manager_id);
+$q2->execute();
+$totalProjects = $q2->get_result()->fetch_assoc()['total_projects'];
+
+
+/* -----------------------------
+    GET TOTAL TASKS FOR MANAGER PROJECTS
+------------------------------ */
+$q3 = $conn->prepare("SELECT COUNT(*) AS total_tasks 
+                      FROM tasks 
+                      WHERE project_id IN (SELECT project_id FROM projects WHERE manager_id = ?)");
+$q3->bind_param("i", $manager_id);
+$q3->execute();
+$totalTasks = $q3->get_result()->fetch_assoc()['total_tasks'];
+
+
+/* -----------------------------
+    GET PROJECT SUMMARY TABLE
+------------------------------ */
+$projectSummary = $conn->prepare("
+    SELECT 
+        p.project_id,
+        p.project_name,
+        COUNT(t.task_id) AS total_tasks,
+        SUM(t.status = 'Completed') AS completed_tasks
+    FROM projects p
+    LEFT JOIN tasks t ON p.project_id = t.project_id
+    WHERE p.manager_id = ?
+    GROUP BY p.project_id
+");
+$projectSummary->bind_param("i", $manager_id);
+$projectSummary->execute();
+$projectRows = $projectSummary->get_result();
+
+
+/* -----------------------------
+    GET UPCOMING TASKS (ORDER BY DUE DATE)
+------------------------------ */
+$upcoming = $conn->prepare("
+    SELECT t.*, p.project_name, e.name AS employee_name
+    FROM tasks t
+    JOIN projects p ON t.project_id = p.project_id
+    JOIN employee_login e ON t.assigned_to = e.staff_id
+    WHERE p.manager_id = ?
+    ORDER BY t.due_date ASC
+");
+$upcoming->bind_param("i", $manager_id);
+$upcoming->execute();
+$upcomingTasks = $upcoming->get_result();
+
+
+/* -----------------------------
+    CHART DATA
+------------------------------ */
+$chartLabels = [];
+$chartData = [];
+
+$ret = $conn->prepare("
+    SELECT p.project_name,
+           ROUND((SUM(t.status = 'Completed') / COUNT(t.task_id)) * 100, 0) AS completion_percent
+    FROM projects p
+    LEFT JOIN tasks t ON p.project_id = t.project_id
+    WHERE p.manager_id = ?
+    GROUP BY p.project_id
+");
+$ret->bind_param("i", $manager_id);
+$ret->execute();
+$chartRes = $ret->get_result();
+
+while ($row = $chartRes->fetch_assoc()) {
+    $chartLabels[] = $row['project_name'];
+    $chartData[] = $row['completion_percent'] ?? 0;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Make-It-All | Manager Dashboard</title>
 
-  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-  <!-- Style Sheet -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/frontend/styles/style.css">
-
 </head>
+
 <body class="p-4 bg-light d-flex flex-column min-vh-100">
 
   <!-- Navbar -->
@@ -28,186 +114,105 @@ require_once 'config.php';
         <img src="../../assets/MakeItAllLogo.png" height="40" class="me-2"> 
         Make-It-All Ltd
       </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-              data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-end" id="mainNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link fw-semibold" href="#">Login</a></li>
-          <li class="nav-item"><a class="nav-link fw-semibold" href="#">Register</a></li>
-          <li class="nav-item"><a class="nav-link fw-semibold" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link fw-semibold" href="#">Dashboards</a></li>
-        </ul>
-      </div>
     </div>
   </nav>
 
   <div class="container my-4">
-    <h1 id="dashboard-dash" class="mb-4">Manager Dashboard</h1>
+    <h1 class="mb-4">Manager Dashboard</h1>
 
     <!-- Summary Row -->
     <div class="row dashboard-projects mb-4">
       <div class="col-md-4 mb-3">
-        <div class="dashboard-project-box blue p-3 rounded shadow-sm">
-          <div class="dashboard-project-content text-center">
-            <h2>Total Employees</h2>
-            <h3 id="blue">3</h3>
-          </div>
+        <div class="dashboard-project-box blue p-3 rounded shadow-sm text-center">
+          <h2>Total Employees</h2>
+          <h3><?= $totalEmployees ?></h3>
         </div>
       </div>
+
       <div class="col-md-4 mb-3">
-        <div class="dashboard-project-box green p-3 rounded shadow-sm">
-          <div class="dashboard-project-content text-center">
-            <h2>Total Projects</h2>
-            <h3 id="green">3</h3>
-          </div>
+        <div class="dashboard-project-box green p-3 rounded shadow-sm text-center">
+          <h2>Total Projects</h2>
+          <h3><?= $totalProjects ?></h3>
         </div>
       </div>
+
       <div class="col-md-4 mb-3">
-        <div class="dashboard-project-box red p-3 rounded shadow-sm">
-          <div class="dashboard-project-content text-center">
-            <h2>Total Tasks</h2>
-            <h3 id="red">5</h3>
-          </div>
+        <div class="dashboard-project-box red p-3 rounded shadow-sm text-center">
+          <h2>Total Tasks</h2>
+          <h3><?= $totalTasks ?></h3>
         </div>
       </div>
     </div>
 
-    <!-- Project Summary -->
-    <h5 id="manager-table-title" class="mb-3">Project Summary</h5>
+    <!-- Project Summary Table -->
+    <h5 class="mb-3">Project Summary</h5>
     <div class="table-responsive mb-4">
-      <table id="manager-table" class="table table-bordered table-striped">
+      <table class="table table-bordered table-striped">
         <thead class="table-light">
           <tr>
             <th>Project</th>
-            <th>Team Members</th>
             <th>Tasks</th>
             <th>Completed</th>
             <th>Completion %</th>
           </tr>
         </thead>
         <tbody>
+
+        <?php while ($p = $projectRows->fetch_assoc()): ?>
+          <?php
+            $percent = ($p['total_tasks'] > 0) 
+              ? round(($p['completed_tasks'] / $p['total_tasks']) * 100)
+              : 0;
+          ?>
           <tr>
-            <td>Project Alpha</td>
-            <td>Alice, Ben</td>
-            <td>2</td>
-            <td>1</td>
-            <td>50%</td>
+            <td><?= $p['project_name'] ?></td>
+            <td><?= $p['total_tasks'] ?></td>
+            <td><?= $p['completed_tasks'] ?></td>
+            <td><?= $percent ?>%</td>
           </tr>
-          <tr>
-            <td>Project Beta</td>
-            <td>Ben, Cara</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0%</td>
-          </tr>
-          <tr>
-            <td>Project Gamma</td>
-            <td>Alice, Cara</td>
-            <td>2</td>
-            <td>1</td>
-            <td>50%</td>
-          </tr>
+        <?php endwhile; ?>
+
         </tbody>
       </table>
     </div>
 
     <!-- Upcoming Tasks -->
-    <div id="manager-tasks" class="mb-4">
-      <h5>Upcoming Tasks (Next Due First)</h5>
-      <ul class="list-group">
+    <h5>Upcoming Tasks (Soonest First)</h5>
+    <ul class="list-group mb-4">
 
-        <li class="list-group-item d-flex justify-content-between align-items-center bg-light border border-danger rounded mb-2">
-          <div>
-            <strong>Submit weekly report</strong> 
-            <small class="text-muted">(Project Alpha)</small><br>
-            <small class="text-danger">Importance: High</small> |
-            <small>Due: 29/10/2025 - Overdue</small>
-          </div>
-          <small>Assigned to: Alice</small>
-        </li>
+    <?php while ($t = $upcomingTasks->fetch_assoc()): ?>
+      <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
+        <div>
+          <strong><?= $t['task_name'] ?></strong>
+          <small class="text-muted">(<?= $t['project_name'] ?>)</small><br>
+          <small>Due: <?= $t['due_date'] ?></small>
+        </div>
+        <small>Assigned: <?= $t['employee_name'] ?></small>
+      </li>
+    <?php endwhile; ?>
 
-        <li class="list-group-item d-flex justify-content-between align-items-center bg-light border border-danger rounded mb-2">
-          <div>
-            <strong>Review client feedback</strong> 
-            <small class="text-muted">(Project Gamma)</small><br>
-            <small class="text-danger">Importance: High</small> |
-            <small>Due: 31/10/2025 - Overdue</small>
-          </div>
-          <small>Assigned to: Cara</small>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
-          <div>
-            <strong>Attend team meeting</strong> 
-            <small class="text-muted">(Project Beta)</small><br>
-            <small class="text-warning">Importance: Medium</small> |
-            <small>Due: 03/11/2025</small>
-          </div>
-          <small>Assigned to: Ben</small>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
-          <div>
-            <strong>Design mockups</strong> 
-            <small class="text-muted">(Project Gamma)</small><br>
-            <small class="text-warning">Importance: Medium</small> |
-            <small>Due: 07/11/2025</small>
-          </div>
-          <small>Assigned to: Cara</small>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center mb-2">
-          <div>
-            <strong>Update client records</strong> 
-            <small class="text-muted">(Project Alpha)</small><br>
-            <small class="text-success">Importance: Low</small> |
-            <small>Due: 10/11/2025</small>
-          </div>
-          <small>Assigned to: Alice</small>
-        </li>
-
-      </ul>
-    </div>
+    </ul>
 
     <!-- Chart -->
-    <div id="manager-chart" class="mb-4">
-      <h5>Project Completion Overview</h5>
-      <canvas id="managerChart"></canvas>
-    </div>
+    <h5>Project Completion Overview</h5>
+    <canvas id="managerChart"></canvas>
 
   </div>
 
-  <!-- Footer -->
-  <footer class="footer text-center mt-auto py-3 bg-light">
-    <div class="container">
-      <p class="mb-0">Make-It-All Ltd | Team 27 Project</p>
-    </div>
-  </footer>
-
-  <!-- Bootstrap Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
   <script>
-    const ctx = document.getElementById("managerChart");
-    new Chart(ctx, {
+    const labels = <?= json_encode($chartLabels) ?>;
+    const data = <?= json_encode($chartData) ?>;
+
+    new Chart(document.getElementById("managerChart"), {
       type: "bar",
       data: {
-        labels: ["Project Alpha", "Project Beta", "Project Gamma"],
+        labels: labels,
         datasets: [{
           label: "% Completion",
-          data: [50, 0, 50],
-          backgroundColor: "#198754"
+          data: data,
         }]
       },
-      options: {
-        scales: {
-          y: { beginAtZero: true, max: 100 }
-        }
-      }
+      options: { scales: { y: { min: 0, max: 100 } } }
     });
   </script>
 
