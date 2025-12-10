@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once '../../database/config.php';
 session_start();
 
 // TEMP: normally you'd get manager ID from login session
