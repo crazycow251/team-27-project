@@ -2,9 +2,51 @@
 require_once '../../database/config.php';
 session_start();
 
-// TEMP: normally you'd get manager ID from login session
-$manager_id = 100001; // <-- Replace with $_SESSION['staff_id'] once login is ready
+$manager_id = 100001;
 
+/* =============================
+   HANDLE ADD PROJECT FORM
+============================= */
+if (isset($_POST['add_project'])) {
+
+    $project_name = $_POST['project_name'];
+    $team = $_POST['team'] ?? [];
+    $team_leader = $_POST['team_leader'] ?? null;
+
+    if (empty(trim($project_name))) {
+        die("Project name cannot be empty");
+    }
+
+    if (empty($team)) {
+        die("At least one team member must be selected");
+    }
+
+    // Insert project
+    $stmt = $conn->prepare(
+        "INSERT INTO projects (project_name, manager_id) VALUES (?, ?)"
+    );
+    $stmt->bind_param("si", $project_name, $manager_id);
+    $stmt->execute();
+
+    $project_id = $conn->insert_id;
+
+    // Assign team members to team_members table
+    $stmt = $conn->prepare(
+        "INSERT INTO team_members (project_id, employee_id, role) VALUES (?, ?, ?)"
+    );
+
+    foreach ($team as $employee_id) {
+        // Assign role
+        $role = ($employee_id == $team_leader) ? "Team Leader" : "Member";
+
+        $stmt->bind_param("iis", $project_id, $employee_id, $role);
+        $stmt->execute();
+    }
+
+    // Prevent resubmission
+    header("Location: manager.php");
+    exit;
+}
 
 /* -----------------------------
     GET TOTAL EMPLOYEES
@@ -68,6 +110,12 @@ $upcoming->bind_param("i", $manager_id);
 $upcoming->execute();
 $upcomingTasks = $upcoming->get_result();
 
+/* -----------------------------
+    Users
+------------------------------ */
+$users = $conn->query("SELECT staff_id, name FROM employee_login");
+
+
 
 /* -----------------------------
     CHART DATA
@@ -77,7 +125,12 @@ $chartData = [];
 
 $ret = $conn->prepare("
     SELECT p.project_name,
-           ROUND((SUM(t.status = 'Completed') / COUNT(t.task_id)) * 100, 0) AS completion_percent
+           ROUND(
+  IF(COUNT(t.task_id) = 0, 0,
+     (SUM(t.status = 'Completed') / COUNT(t.task_id)) * 100),
+  0
+) AS completion_percent
+
     FROM projects p
     LEFT JOIN tasks t ON p.project_id = t.project_id
     WHERE p.manager_id = ?
@@ -103,6 +156,7 @@ while ($row = $chartRes->fetch_assoc()) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/frontend/styles/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body class="p-4 bg-light d-flex flex-column min-vh-100">
@@ -119,6 +173,16 @@ while ($row = $chartRes->fetch_assoc()) {
 
   <div class="container my-4">
     <h1 class="mb-4">Manager Dashboard</h1>
+
+<div class="d-flex justify-content-end mb-3">
+  <button 
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#addProjectModal">
+    + Add New Project
+  </button>
+</div>
+
 
     <!-- Summary Row -->
     <div class="row dashboard-projects mb-4">
@@ -143,6 +207,47 @@ while ($row = $chartRes->fetch_assoc()) {
         </div>
       </div>
     </div>
+
+<div class="modal fade" id="addProjectModal">
+  <div class="modal-dialog">
+    <form method="POST" class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <label class="form-label">Project Name</label>
+        <input type="text" name="project_name" class="form-control" required>
+
+        <<label class="form-label mt-3">Assign Team Members</label>
+<?php while ($u = $users->fetch_assoc()): ?>
+  <div class="form-check d-flex align-items-center justify-content-between">
+    <div>
+      <input class="form-check-input" type="checkbox" name="team[]" value="<?= $u['staff_id'] ?>" id="staff-<?= $u['staff_id'] ?>">
+      <label class="form-check-label" for="staff-<?= $u['staff_id'] ?>"><?= $u['name'] ?></label>
+    </div>
+    <div>
+      <input class="form-check-input" type="radio" name="team_leader" value="<?= $u['staff_id'] ?>">
+      <label class="form-check-label">Team Leader</label>
+    </div>
+  </div>
+<?php endwhile; ?>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" name="add_project" class="btn btn-success">
+          Create Project
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
 
     <!-- Project Summary Table -->
     <h5 class="mb-3">Project Summary</h5>
@@ -199,22 +304,42 @@ while ($row = $chartRes->fetch_assoc()) {
 
   </div>
 
-  <script>
-    const labels = <?= json_encode($chartLabels) ?>;
-    const data = <?= json_encode($chartData) ?>;
+<script>
+const ctx = document.getElementById("managerChart");
 
-    new Chart(document.getElementById("managerChart"), {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [{
-          label: "% Completion",
-          data: data,
-        }]
+new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: <?= json_encode($chartLabels) ?>,
+    datasets: [{
+      label: "Completion %",
+      data: <?= json_encode($chartData) ?>,
+      borderWidth: 2,
+      tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        title: {
+          display: true,
+          text: "Completion (%)"
+        }
       },
-      options: { scales: { y: { min: 0, max: 100 } } }
-    });
-  </script>
+      x: {
+        title: {
+          display: true,
+          text: "Projects"
+        }
+      }
+    }
+  }
+});
+</script>
+
 
 </body>
 </html>
