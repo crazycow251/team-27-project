@@ -4,9 +4,7 @@ session_start();
 
 $manager_id = 100001;
 
-/* =============================
-   HANDLE ADD PROJECT FORM
-============================= */
+//Handle add project form
 if (isset($_POST['add_project'])) {
 
     $project_name = $_POST['project_name'];
@@ -21,7 +19,7 @@ if (isset($_POST['add_project'])) {
         die("At least one team member must be selected");
     }
 
-    // Insert project
+    //Inserts project
     $stmt = $conn->prepare(
         "INSERT INTO projects (project_name, manager_id) VALUES (?, ?)"
     );
@@ -30,44 +28,39 @@ if (isset($_POST['add_project'])) {
 
     $project_id = $conn->insert_id;
 
-    // Assign team members to team_members table
+    //Assigns a team members to team_members table
     $stmt = $conn->prepare(
         "INSERT INTO team_members (project_id, employee_id, role) VALUES (?, ?, ?)"
     );
 
+    //Assigns role
     foreach ($team as $employee_id) {
-        // Assign role
+
         $role = ($employee_id == $team_leader) ? "Team Leader" : "Member";
 
         $stmt->bind_param("iis", $project_id, $employee_id, $role);
         $stmt->execute();
     }
 
-    // Prevent resubmission
+    // Prevents resubmission of task
     header("Location: manager.php");
     exit;
 }
 
-/* -----------------------------
-    GET TOTAL EMPLOYEES
------------------------------- */
+/*Gets total employees*/
 $q1 = $conn->prepare("SELECT COUNT(*) AS total_employees FROM employee_login");
 $q1->execute();
 $totalEmployees = $q1->get_result()->fetch_assoc()['total_employees'];
 
 
-/* -----------------------------
-    GET TOTAL PROJECTS FOR THIS MANAGER
------------------------------- */
+//Gets total prpojects for this manager
 $q2 = $conn->prepare("SELECT COUNT(*) AS total_projects FROM projects WHERE manager_id = ?");
 $q2->bind_param("i", $manager_id);
 $q2->execute();
 $totalProjects = $q2->get_result()->fetch_assoc()['total_projects'];
 
 
-/* -----------------------------
-    GET TOTAL TASKS FOR MANAGER PROJECTS
------------------------------- */
+//Gets total task for manager project
 $q3 = $conn->prepare("SELECT COUNT(*) AS total_tasks 
                       FROM tasks 
                       WHERE project_id IN (SELECT project_id FROM projects WHERE manager_id = ?)");
@@ -76,9 +69,7 @@ $q3->execute();
 $totalTasks = $q3->get_result()->fetch_assoc()['total_tasks'];
 
 
-/* -----------------------------
-    GET PROJECT SUMMARY TABLE
------------------------------- */
+//Gets project summary tables
 $projectSummary = $conn->prepare("
     SELECT 
         p.project_id,
@@ -95,9 +86,7 @@ $projectSummary->execute();
 $projectRows = $projectSummary->get_result();
 
 
-/* -----------------------------
-    GET UPCOMING TASKS (ORDER BY DUE DATE)
------------------------------- */
+//Gets upcoming tasks ordered by due date
 $upcoming = $conn->prepare("
     SELECT t.*, p.project_name, e.name AS employee_name
     FROM tasks t
@@ -110,16 +99,12 @@ $upcoming->bind_param("i", $manager_id);
 $upcoming->execute();
 $upcomingTasks = $upcoming->get_result();
 
-/* -----------------------------
-    Users
------------------------------- */
+// All users
 $users = $conn->query("SELECT staff_id, name FROM employee_login");
 
 
 
-/* -----------------------------
-    CHART DATA
------------------------------- */
+//Chart data
 $chartLabels = [];
 $chartData = [];
 
@@ -249,7 +234,7 @@ while ($row = $chartRes->fetch_assoc()) {
 </div>
 
 
-    <!-- Project Summary Table -->
+    //Project Summary Table 
     <h5 class="mb-3">Project Summary</h5>
     <div class="table-responsive mb-4">
       <table class="table table-bordered table-striped">
@@ -281,7 +266,7 @@ while ($row = $chartRes->fetch_assoc()) {
       </table>
     </div>
 
-    <!-- Upcoming Tasks -->
+    //Upcoming Tasks
     <h5>Upcoming Tasks (Soonest First)</h5>
     <ul class="list-group mb-4">
 
@@ -298,7 +283,7 @@ while ($row = $chartRes->fetch_assoc()) {
 
     </ul>
 
-    <!-- Chart -->
+    //Chart 
     <h5>Project Completion Overview</h5>
     <canvas id="managerChart"></canvas>
 
