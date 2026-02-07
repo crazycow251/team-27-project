@@ -7,18 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Make-It-All | Manager Dashboard</title>
 
-  <!-- CDNs -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <!-- Style Sheet -->
   <link rel="stylesheet" href="../../frontend/styles/style.css">
 
 </head>
 <body class="p-4 bg-light">
 
-  <!-- Navbar -->
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
@@ -37,7 +34,6 @@
   <div class="container">
     <h1 id="dashboard-dash">Manager Dashboard</h1>
 
-    <!-- Summary Row -->
     <div class="dashboard-projects">
         <div class="dashboard-project-box blue">
             <div class="dashboard-project-content">
@@ -59,8 +55,6 @@
         </div>
     </div>
 
-
-    <!-- Project Summary -->
     <h5 id="manager-table-title" class="mb-3">Project Summary</h5>
     <table id="manager-table" class="table table-bordered table-striped mb-4">
       <thead>
@@ -97,7 +91,6 @@
       </tbody>
     </table>
 
-    <!-- Upcoming Tasks -->
     <div id="manager-tasks" class="mb-4">
       <h5>Upcoming Tasks (Next Due First)</h5>
       <ul class="list-group">
@@ -153,14 +146,12 @@
       </ul>
     </div>
 
-    <!-- Chart -->
     <div id="manager-chart" class="mb-4">
       <h5>Project Completion Overview</h5>
       <canvas id="managerChart"></canvas>
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="footer text-center mt-auto">
     <div class="container">
       <p>Make-It-All Ltd | Team 27 Project</p>

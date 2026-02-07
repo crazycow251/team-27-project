@@ -2,12 +2,10 @@
 require_once '../../database/config.php';
 session_start();
 
-// TEMP: hardcoded manager (replace with session later)
+//Temporary manager login
 $manager_id = 100001;
 
-/* =========================
-   ADD PROJECT HANDLER
-   ========================= */
+//ADD PROJECT HANDLER
 if (isset($_POST['add_project'])) {
 
     $project_name = trim($_POST['project_name']);
@@ -22,7 +20,7 @@ if (isset($_POST['add_project'])) {
         die("At least one team member must be selected");
     }
 
-    // Insert project
+    //Insert project
     $stmt = $conn->prepare(
         "INSERT INTO projects (project_name, manager_id) VALUES (?, ?)"
     );
@@ -31,7 +29,7 @@ if (isset($_POST['add_project'])) {
 
     $project_id = $conn->insert_id;
 
-    // Assign team members
+    //Assigns team members
     $stmt = $conn->prepare(
         "INSERT INTO team_members (project_id, employee_id, role)
          VALUES (?, ?, ?)"
@@ -47,16 +45,14 @@ if (isset($_POST['add_project'])) {
     exit;
 }
 
-/* =========================
-   DASHBOARD COUNTS
-   ========================= */
+//Dashboard counts
 
-// Total employees
+//Total employees
 $q1 = $conn->prepare("SELECT COUNT(*) AS total FROM employee_login");
 $q1->execute();
 $totalEmployees = $q1->get_result()->fetch_assoc()['total'];
 
-// Total projects for manager
+//Total projects for manager
 $q2 = $conn->prepare(
     "SELECT COUNT(*) AS total FROM projects WHERE manager_id = ?"
 );
@@ -64,7 +60,7 @@ $q2->bind_param("i", $manager_id);
 $q2->execute();
 $totalProjects = $q2->get_result()->fetch_assoc()['total'];
 
-// Total tasks for manager projects
+//Total tasks for manager projects
 $q3 = $conn->prepare(
     "SELECT COUNT(*) AS total
      FROM tasks
@@ -76,9 +72,7 @@ $q3->bind_param("i", $manager_id);
 $q3->execute();
 $totalTasks = $q3->get_result()->fetch_assoc()['total'];
 
-/* =========================
-   PROJECT SUMMARY
-   ========================= */
+//Project summary bit
 $projectSummary = $conn->prepare(
     "SELECT
         p.project_id,
@@ -94,9 +88,7 @@ $projectSummary->bind_param("i", $manager_id);
 $projectSummary->execute();
 $projectRows = $projectSummary->get_result();
 
-/* =========================
-   UPCOMING TASKS
-   ========================= */
+//Upcoming tasks
 $upcoming = $conn->prepare(
     "SELECT
         t.task_name,
@@ -113,16 +105,13 @@ $upcoming->bind_param("i", $manager_id);
 $upcoming->execute();
 $upcomingTasks = $upcoming->get_result();
 
-/* =========================
-   ALL EMPLOYEES (ADD PROJECT MODAL)
-   ========================= */
+//All employees shown
 $users = $conn->query(
     "SELECT staff_id, name FROM employee_login ORDER BY name"
 );
 
-/* =========================
-   CHART DATA
-   ========================= */
+//Chart data 
+
 $chartLabels = [];
 $chartData = [];
 
