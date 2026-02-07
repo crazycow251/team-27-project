@@ -38,19 +38,19 @@
         <div class="dashboard-project-box blue">
             <div class="dashboard-project-content">
                 <h2>Total Employees</h2>
-                <h3 id="blue">3</h3>
+                <h3 id="blue"><?= $totalEmployees ?></h3>
             </div>
         </div>
         <div class="dashboard-project-box green">
             <div class="dashboard-project-content">
                 <h2>Total Projects</h2>
-                <h3 id="green">3</h3>
+                <h3 id="green"><?= $totalProjects ?></h3>
             </div>
         </div>
         <div class="dashboard-project-box red">
             <div class="dashboard-project-content">
                 <h2>Total Tasks</h2>
-                <h3 id="red">5</h3>
+                <h3 id="red"><?= $totalTasks ?></h3>
             </div>
         </div>
     </div>
@@ -67,83 +67,37 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Project Alpha</td>
-          <td>Alice, Ben</td>
-          <td>2</td>
-          <td>1</td>
-          <td>50%</td>
-        </tr>
-        <tr>
-          <td>Project Beta</td>
-          <td>Ben, Cara</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0%</td>
-        </tr>
-        <tr>
-          <td>Project Gamma</td>
-          <td>Alice, Cara</td>
-          <td>2</td>
-          <td>1</td>
-          <td>50%</td>
-        </tr>
-      </tbody>
+<?php while ($row = $projectRows->fetch_assoc()): 
+    $percent = $row['total_tasks'] == 0
+        ? 0
+        : round(($row['completed_tasks'] / $row['total_tasks']) * 100);
+?>
+<tr>
+  <td><?= htmlspecialchars($row['project_name']) ?></td>
+  <td><?= $row['total_tasks'] ?></td>
+  <td><?= $row['completed_tasks'] ?></td>
+  <td><?= $percent ?>%</td>
+</tr>
+<?php endwhile; ?>
+</tbody>
+
     </table>
 
     <div id="manager-tasks" class="mb-4">
       <h5>Upcoming Tasks (Next Due First)</h5>
       <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center bg-light border-danger">
-          <div>
-            <strong>Submit weekly report</strong> 
-            <small class="text-muted">(Project Alpha)</small><br>
-            <small class="text-danger">Importance: High</small> |
-            <small>Due: 29/10/2025 - Overdue</small>
-          </div>
-          <small>Assigned to: Alice</small>
-        </li>
+<?php while ($task = $upcomingTasks->fetch_assoc()): ?>
+<li class="list-group-item d-flex justify-content-between align-items-center">
+  <div>
+    <strong><?= htmlspecialchars($task['task_name']) ?></strong>
+    <small class="text-muted">(<?= htmlspecialchars($task['project_name']) ?>)</small><br>
+    <small>Due: <?= $task['due_date'] ?></small>
+  </div>
+  <small>Assigned to: <?= htmlspecialchars($task['employee_name']) ?></small>
+</li>
+<?php endwhile; ?>
+</ul>
 
-        <li class="list-group-item d-flex justify-content-between align-items-center bg-light border-danger">
-          <div>
-            <strong>Review client feedback</strong> 
-            <small class="text-muted">(Project Gamma)</small><br>
-            <small class="text-danger">Importance: High</small> |
-            <small>Due: 31/10/2025 - Overdue</small>
-          </div>
-          <small>Assigned to: Cara</small>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>Attend team meeting</strong> 
-            <small class="text-muted">(Project Beta)</small><br>
-            <small class="text-warning">Importance: Medium</small> |
-            <small>Due: 03/11/2025</small>
-          </div>
-          <small>Assigned to: Ben</small>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>Design mockups</strong> 
-            <small class="text-muted">(Project Gamma)</small><br>
-            <small class="text-warning">Importance: Medium</small> |
-            <small>Due: 07/11/2025</small>
-          </div>
-          <small>Assigned to: Cara</small>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>Update client records</strong> 
-            <small class="text-muted">(Project Alpha)</small><br>
-            <small class="text-success">Importance: Low</small> |
-            <small>Due: 10/11/2025</small>
-          </div>
-          <small>Assigned to: Alice</small>
-        </li>
-      </ul>
     </div>
 
     <div id="manager-chart" class="mb-4">
@@ -159,26 +113,25 @@
   </div>
 
   <script>
+const ctx = document.getElementById("managerChart");
 
-    const ctx = document.getElementById("managerChart");
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Project Alpha", "Project Beta", "Project Gamma"],
-        datasets: [{
-          label: "% Completion",
-          data: [50, 0, 50],
-          backgroundColor: "#198754"
-        }]
-      },
-      options: {
-        scales: {
-          y: { beginAtZero: true, max: 100 }
-        }
-      }
-    });
-    
-  </script>
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: <?= json_encode($chartLabels) ?>,
+    datasets: [{
+      label: "% Completion",
+      data: <?= json_encode($chartData) ?>,
+      backgroundColor: "#198754"
+    }]
+  },
+  options: {
+    scales: {
+      y: { beginAtZero: true, max: 100 }
+    }
+  }
+});
+</script>
 
 </body>
 </html>
